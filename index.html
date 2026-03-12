@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Visitor Scanner</title>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+</head>
+
+<body>
+
+<h2>Scan Visitor QR</h2>
+
+<div id="reader" style="width:300px"></div>
+
+<script>
+
+function onScanSuccess(decodedText) {
+
+ let visitor_id = decodedText;
+
+ fetch("https://script.google.com/macros/s/AKfycbzoHlkD-wEYgX_82lKZb_nZ72GwA8brncq23XX0vOFKw7K9RhWzyX2C7_Wx4v_DY22v/exec",{
+   method:"POST",
+   body:JSON.stringify({
+     id:visitor_id,
+     name:"visitor"
+   })
+ })
+
+ alert("Visitor Logged: "+visitor_id)
+
+}
+
+new Html5QrcodeScanner("reader",{fps:10,qrbox:250})
+.render(onScanSuccess)
+
+</script>
+
+</body>
+</html>
