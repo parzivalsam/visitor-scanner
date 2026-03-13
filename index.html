@@ -1,42 +1,98 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>Visitor Scanner</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+background:#f2f2f2;
+padding:20px;
+}
+
+h2{
+margin-bottom:20px;
+}
+
+.box{
+background:white;
+padding:20px;
+border-radius:10px;
+max-width:350px;
+margin:auto;
+box-shadow:0 0 10px rgba(0,0,0,0.15);
+}
+
+#reader{
+margin:auto;
+}
+
+#status{
+margin-top:20px;
+font-size:18px;
+color:green;
+}
+
+</style>
 
 </head>
 
 <body>
 
-<h2>Scan Visitor QR</h2>
+<h2>Visitor Entry Scanner</h2>
 
-<div id="reader" style="width:300px"></div>
+<div class="box">
+
+<div id="reader"></div>
+
+<div id="status"></div>
+
+</div>
 
 <script>
 
-function onScanSuccess(decodedText){
+function onScanSuccess(result){
 
-let visitor = JSON.parse(decodedText)
+let scanned = JSON.parse(result)
 
-let url =
-"https://script.google.com/macros/s/AKfycbzl1OScKyWO8vzG-n0be4CXw6T8qjAkB6Rx8hgPJquTuRT-mytmPJXWg0QW-a7ORe_v/exec"+
-"?name="+encodeURIComponent(visitor.name)+
-"&address="+encodeURIComponent(visitor.address)+
-"&prant="+encodeURIComponent(visitor.prant)+
-"&vibhag="+encodeURIComponent(visitor.vibhag)+
-"&jila="+encodeURIComponent(visitor.jila)+
-"&nagar="+encodeURIComponent(visitor.nagar)+
-"&basti="+encodeURIComponent(visitor.basti)+
-"&mobile="+encodeURIComponent(visitor.mobile)
+let data = {
 
-fetch(url)
+type:"scan",
 
-alert("Visitor Logged: "+visitor.name)
+name:scanned.name,
+address:scanned.address,
+prant:scanned.prant,
+vibhag:scanned.vibhag,
+jila:scanned.jila,
+nagar:scanned.nagar,
+basti:scanned.basti,
+mobile:scanned.mobile
 
 }
-new Html5QrcodeScanner("reader",{fps:10,qrbox:250})
-.render(onScanSuccess)
+
+fetch("https://script.google.com/macros/s/AKfycbwL-4eTJquedO10DfY3q1B6gQCvSv_Vhc0B0fhWX8u-wj9vZ7y4PHuVQlRuZXiwt2kk/exec",{
+
+method:"POST",
+body:JSON.stringify(data)
+
+})
+
+document.getElementById("status").innerHTML =
+"Entry Recorded for <b>"+scanned.name+"</b>"
+
+}
+
+new Html5QrcodeScanner(
+"reader",
+{fps:10, qrbox:250}
+).render(onScanSuccess)
+
 </script>
 
 </body>
