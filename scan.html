@@ -37,7 +37,15 @@ margin:auto;
 #result{
 margin-top:20px;
 font-size:18px;
+font-weight:bold;
+}
+
+.success{
 color:green;
+}
+
+.error{
+color:red;
 }
 
 </style>
@@ -58,34 +66,53 @@ color:green;
 
 <script>
 
+let scanning = true
+
 function onScanSuccess(result){
+
+if(!scanning) return
+
+scanning = false
 
 try{
 
 let data = JSON.parse(result)
 
-// send scan data to Apps Script
+fetch("https://script.google.com/macros/s/AKfycbyil4ZUrLbQO1vSjOKRkbNjV249l9Muyubufiqn7pESL1rTdWo8qb570IWbhdZ5eCT8QA/exec",{
 
-fetch("https://script.google.com/macros/s/AKfycby3afy31Rq49FduZ-I6MIUtGGD8uWvbrW4dW1yUVlQycHhP0WRH8PtZRLqNM38OicMyKA/exec",{
 method:"POST",
 body:JSON.stringify(data)
+
 })
 
-// show result on screen
+.then(res=>res.text())
+
+.then(res=>{
+
+if(res=="ALREADY_SCANNED"){
 
 document.getElementById("result").innerHTML =
-"Entry recorded for <b>"+data.name+"</b>"
+"<span class='error'>⚠ Already Entered</span>"
+
+}else{
+
+document.getElementById("result").innerHTML =
+"<span class='success'>✅ Entry Recorded for "+data.name+"</span>"
+
+}
+
+})
 
 }catch(e){
 
 document.getElementById("result").innerHTML =
-"Invalid QR Code"
+"<span class='error'>Invalid QR Code</span>"
 
 }
 
-}
+setTimeout(()=>{ scanning=true },3000)
 
-// start scanner
+}
 
 new Html5QrcodeScanner(
 "reader",
