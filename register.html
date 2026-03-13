@@ -67,19 +67,12 @@ margin-top:25px;
 <div class="form-box">
 
 <input id="name" placeholder="Name">
-
 <input id="address" placeholder="Address">
-
 <input id="prant" placeholder="Prant">
-
 <input id="vibhag" placeholder="Vibhag">
-
 <input id="jila" placeholder="Jila">
-
 <input id="nagar" placeholder="Nagar">
-
 <input id="basti" placeholder="Basti">
-
 <input id="mobile" placeholder="Mobile">
 
 <button onclick="register()">Register</button>
@@ -101,27 +94,24 @@ let nagar = document.getElementById("nagar").value.trim()
 let basti = document.getElementById("basti").value.trim()
 let mobile = document.getElementById("mobile").value.trim()
 
-// ----- VALIDATION -----
+// validation
 
 if(!name || !address || !prant || !vibhag || !jila || !nagar || !basti || !mobile){
 
 alert("Please fill all fields")
-
 return
-}
 
-// mobile validation
+}
 
 if(mobile.length < 10){
 
 alert("Enter valid mobile number")
-
 return
+
 }
 
-// ----- DATA OBJECT -----
-
 let data = {
+
 name:name,
 address:address,
 prant:prant,
@@ -130,6 +120,7 @@ jila:jila,
 nagar:nagar,
 basti:basti,
 mobile:mobile
+
 }
 
 // send to sheet
