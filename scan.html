@@ -21,16 +21,19 @@ padding:20px;
 background:white;
 padding:20px;
 border-radius:10px;
-max-width:360px;
+max-width:380px;
 margin:auto;
 box-shadow:0 0 12px rgba(0,0,0,0.15);
 }
 
 #result{
 margin-top:20px;
-font-size:18px;
+font-size:20px;
 font-weight:bold;
 }
+
+.green{color:green;}
+.red{color:red;}
 
 </style>
 
@@ -50,42 +53,50 @@ font-weight:bold;
 
 <script>
 
-let lastScan = ""
-let lock = false
+let lastMobile = ""
+let lastTime = 0
 
 function onScanSuccess(result){
-
-if(lock) return
 
 try{
 
 let data = JSON.parse(result)
+let now = Date.now()
 
-if(lastScan === data.mobile){
+// block same qr within 5 sec
+
+if(data.mobile === lastMobile && (now-lastTime)<5000){
+
+document.getElementById("result").innerHTML =
+"<span class='red'>⚠ Already Scanned</span>"
+
 return
 }
 
-lock = true
-lastScan = data.mobile
+lastMobile = data.mobile
+lastTime = now
 
-fetch("https://script.google.com/macros/s/AKfycbyOJFVGCopO6mYPb2BmIDxQBMRYp8jIVUsrjZjnpffbOrsLuqAKutKr7-YeAt1KZNHUhQ/exec",{
+// show instant UI
+
+document.getElementById("result").innerHTML =
+"<span class='green'>✅ Scanned : "+data.name+"</span>"
+
+
+// send to server (background)
+
+fetch("https://script.google.com/macros/s/AKfycbxXUDAzk069DwVnqMTpyyropDKrVnV_uZkDz-767bVL5dTqJxpJGByB3l73NWylJZmR9w/exec",{
 
 method:"POST",
 body:JSON.stringify(data)
 
 })
-
 .then(res=>res.text())
-
 .then(res=>{
 
 if(res=="ALREADY_SCANNED"){
 
-alert("⚠ Visitor already entered")
-
-}else{
-
-alert("✅ Entry recorded for " + data.name)
+document.getElementById("result").innerHTML =
+"<span class='red'>⚠ Already Entered : "+data.name+"</span>"
 
 }
 
@@ -93,21 +104,19 @@ alert("✅ Entry recorded for " + data.name)
 
 }catch(e){
 
-alert("Invalid QR")
+document.getElementById("result").innerHTML =
+"<span class='red'>Invalid QR</span>"
 
 }
-
-setTimeout(()=>{
-
-lock=false
-
-},3000)
 
 }
 
 new Html5QrcodeScanner(
 "reader",
-{fps:10, qrbox:250}
+{
+fps:20,
+qrbox:220
+}
 ).render(onScanSuccess)
 
 </script>
