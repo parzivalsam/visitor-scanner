@@ -32,9 +32,6 @@ font-size:18px;
 font-weight:bold;
 }
 
-.success{color:green;}
-.error{color:red;}
-
 </style>
 
 </head>
@@ -53,17 +50,25 @@ font-weight:bold;
 
 <script>
 
-let scanner
+let lastScan = ""
+let lock = false
 
 function onScanSuccess(result){
 
-scanner.clear()   // CAMERA STOP
+if(lock) return
 
 try{
 
 let data = JSON.parse(result)
 
-fetch("https://script.google.com/macros/s/AKfycbwztUP4dYuVzHPle_qbrCqTnNK12TBUtVyxfAB8eEClXoTWF_2pR5EGjWS802WB5Ot7eg/exec",{
+if(lastScan === data.mobile){
+return
+}
+
+lock = true
+lastScan = data.mobile
+
+fetch("https://script.google.com/macros/s/AKfycbyOJFVGCopO6mYPb2BmIDxQBMRYp8jIVUsrjZjnpffbOrsLuqAKutKr7-YeAt1KZNHUhQ/exec",{
 
 method:"POST",
 body:JSON.stringify(data)
@@ -76,13 +81,11 @@ body:JSON.stringify(data)
 
 if(res=="ALREADY_SCANNED"){
 
-document.getElementById("result").innerHTML =
-"<span class='error'>⚠ Already Entered</span>"
+alert("⚠ Visitor already entered")
 
 }else{
 
-document.getElementById("result").innerHTML =
-"<span class='success'>✅ Entry Recorded for "+data.name+"</span>"
+alert("✅ Entry recorded for " + data.name)
 
 }
 
@@ -90,19 +93,22 @@ document.getElementById("result").innerHTML =
 
 }catch(e){
 
-document.getElementById("result").innerHTML =
-"<span class='error'>Invalid QR Code</span>"
+alert("Invalid QR")
 
 }
 
+setTimeout(()=>{
+
+lock=false
+
+},3000)
+
 }
 
-scanner = new Html5QrcodeScanner(
+new Html5QrcodeScanner(
 "reader",
 {fps:10, qrbox:250}
-)
-
-scanner.render(onScanSuccess)
+).render(onScanSuccess)
 
 </script>
 
