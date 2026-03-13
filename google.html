@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Visitor Entry Scanner</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+background:#f2f2f2;
+padding:20px;
+}
+
+h2{
+margin-bottom:20px;
+}
+
+.box{
+background:white;
+padding:20px;
+border-radius:10px;
+max-width:360px;
+margin:auto;
+box-shadow:0 0 12px rgba(0,0,0,0.15);
+}
+
+#reader{
+margin:auto;
+}
+
+#result{
+margin-top:20px;
+font-size:18px;
+color:green;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Visitor Entry Scanner</h2>
+
+<div class="box">
+
+<div id="reader"></div>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+function onScanSuccess(result){
+
+try{
+
+let data = JSON.parse(result)
+
+// send scan data to Apps Script
+
+fetch("https://script.google.com/macros/s/AKfycby3afy31Rq49FduZ-I6MIUtGGD8uWvbrW4dW1yUVlQycHhP0WRH8PtZRLqNM38OicMyKA/exec",{
+method:"POST",
+body:JSON.stringify(data)
+})
+
+// show result on screen
+
+document.getElementById("result").innerHTML =
+"Entry recorded for <b>"+data.name+"</b>"
+
+}catch(e){
+
+document.getElementById("result").innerHTML =
+"Invalid QR Code"
+
+}
+
+}
+
+// start scanner
+
+new Html5QrcodeScanner(
+"reader",
+{fps:10, qrbox:250}
+).render(onScanSuccess)
+
+</script>
+
+</body>
+</html>
