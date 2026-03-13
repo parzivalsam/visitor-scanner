@@ -17,10 +17,6 @@ background:#f2f2f2;
 padding:20px;
 }
 
-h2{
-margin-bottom:20px;
-}
-
 .box{
 background:white;
 padding:20px;
@@ -30,23 +26,14 @@ margin:auto;
 box-shadow:0 0 12px rgba(0,0,0,0.15);
 }
 
-#reader{
-margin:auto;
-}
-
 #result{
 margin-top:20px;
 font-size:18px;
 font-weight:bold;
 }
 
-.success{
-color:green;
-}
-
-.error{
-color:red;
-}
+.success{color:green;}
+.error{color:red;}
 
 </style>
 
@@ -66,19 +53,17 @@ color:red;
 
 <script>
 
-let scanning = true
+let scanner
 
 function onScanSuccess(result){
 
-if(!scanning) return
-
-scanning = false
+scanner.clear()   // CAMERA STOP
 
 try{
 
 let data = JSON.parse(result)
 
-fetch("https://script.google.com/macros/s/AKfycbzbt5yM4JEjLEu-ijCkGD3RcWCeEZn8gU2Xf4GyI883T2TbqARvo8ryMkm5s8soPV4B6A/exec",{
+fetch("https://script.google.com/macros/s/AKfycbwztUP4dYuVzHPle_qbrCqTnNK12TBUtVyxfAB8eEClXoTWF_2pR5EGjWS802WB5Ot7eg/exec",{
 
 method:"POST",
 body:JSON.stringify(data)
@@ -110,14 +95,14 @@ document.getElementById("result").innerHTML =
 
 }
 
-setTimeout(()=>{ scanning=true },3000)
-
 }
 
-new Html5QrcodeScanner(
+scanner = new Html5QrcodeScanner(
 "reader",
 {fps:10, qrbox:250}
-).render(onScanSuccess)
+)
+
+scanner.render(onScanSuccess)
 
 </script>
 
