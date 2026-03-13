@@ -17,15 +17,22 @@
 
 function onScanSuccess(decodedText){
 
- let visitor = JSON.parse(decodedText)
- 
- visitor.scan = true
- fetch("https://script.google.com/macros/s/AKfycbwjmr4stoiLbTPhhkjRuWXNHkyWmNyQ-8oPTAkJHVO-nP3xxQrsMGXa2boNFYl6bCxa/exec",{
-  method:"POST",
-  body:JSON.stringify(visitor)
- })
+let visitor = JSON.parse(decodedText)
 
- alert("Visitor Logged: "+visitor.name)
+let url =
+"https://script.google.com/macros/s/AKfycbzl1OScKyWO8vzG-n0be4CXw6T8qjAkB6Rx8hgPJquTuRT-mytmPJXWg0QW-a7ORe_v/exec"+
+"?name="+encodeURIComponent(visitor.name)+
+"&address="+encodeURIComponent(visitor.address)+
+"&prant="+encodeURIComponent(visitor.prant)+
+"&vibhag="+encodeURIComponent(visitor.vibhag)+
+"&jila="+encodeURIComponent(visitor.jila)+
+"&nagar="+encodeURIComponent(visitor.nagar)+
+"&basti="+encodeURIComponent(visitor.basti)+
+"&mobile="+encodeURIComponent(visitor.mobile)
+
+fetch(url)
+
+alert("Visitor Logged: "+visitor.name)
 
 }
 new Html5QrcodeScanner("reader",{fps:10,qrbox:250})
