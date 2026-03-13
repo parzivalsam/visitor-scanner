@@ -90,43 +90,74 @@ margin-top:25px;
 
 <script>
 
+<script>
+
 function register(){
 
-let data = {
+let name = document.getElementById("name").value.trim()
+let address = document.getElementById("address").value.trim()
+let prant = document.getElementById("prant").value.trim()
+let vibhag = document.getElementById("vibhag").value.trim()
+let jila = document.getElementById("jila").value.trim()
+let nagar = document.getElementById("nagar").value.trim()
+let basti = document.getElementById("basti").value.trim()
+let mobile = document.getElementById("mobile").value.trim()
 
-name:document.getElementById("name").value,
-address:document.getElementById("address").value,
-prant:document.getElementById("prant").value,
-vibhag:document.getElementById("vibhag").value,
-jila:document.getElementById("jila").value,
-nagar:document.getElementById("nagar").value,
-basti:document.getElementById("basti").value,
-mobile:document.getElementById("mobile").value
+// ----- VALIDATION -----
 
+if(!name || !address || !prant || !vibhag || !jila || !nagar || !basti || !mobile){
+
+alert("Please fill all fields")
+
+return
 }
 
-// Google Sheet API
-fetch("https://script.google.com/macros/s/AKfycbwjmr4stoiLbTPhhkjRuWXNHkyWmNyQ-8oPTAkJHVO-nP3xxQrsMGXa2boNFYl6bCxa/exec",{
+// mobile validation
+
+if(mobile.length < 10){
+
+alert("Enter valid mobile number")
+
+return
+}
+
+// ----- DATA OBJECT -----
+
+let data = {
+name:name,
+address:address,
+prant:prant,
+vibhag:vibhag,
+jila:jila,
+nagar:nagar,
+basti:basti,
+mobile:mobile
+}
+
+// send to sheet
+
+fetch("https://script.google.com/macros/s/AKfycbzl1OScKyWO8vzG-n0be4CXw6T8qjAkB6Rx8hgPJquTuRT-mytmPJXWg0QW-a7ORe_v/exec",{
 
 method:"POST",
 body:JSON.stringify(data)
 
 })
 
+// generate QR
+
 let qrdata = JSON.stringify(data)
 
-let qr = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(qrdata)
+let qr = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="+encodeURIComponent(qrdata)
 
 document.getElementById("qr").innerHTML =
 
-"<h3>Registration Successful</h3>" +
-"<p>Your Entry QR</p>" +
-"<img src='"+qr+"'>" +
-"<p>Please save or screenshot this QR</p>"
+"<h3>Registration Successful</h3>"+
+"<img src='"+qr+"'>"+
+"<p>Save this QR for entry</p>"
 
 }
 
-</script>
+</script></script>
 
 </body>
 </html>
