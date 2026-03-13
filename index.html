@@ -18,8 +18,10 @@
 function onScanSuccess(decodedText){
 
  let visitor = JSON.parse(decodedText)
+ 
+ visitor.scan = true
 
- fetch("https://script.google.com/macros/s/AKfycbxUcbWiQv0zHRJgxwgiolbiwm62s9Bj60RRjyjAA4FIIGPWkVs6e5er5D1juX8h3X4s/exec",{
+ fetch("https://script.google.com/macros/s/AKfycbz6z37FJdbMSbSYLFt8KN0lgffOcs7pmHcDDs5WXMEco3WSWiMLlXAfFTDUefKcGCfW/exec",{
   method:"POST",
   body:JSON.stringify(visitor)
  })
