@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Visitor Registration</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+background:#f2f2f2;
+margin:0;
+padding:20px;
+}
+
+h2{
+margin-bottom:20px;
+}
+
+.form-box{
+background:white;
+padding:20px;
+border-radius:10px;
+max-width:400px;
+margin:auto;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+input{
+width:90%;
+padding:10px;
+margin:8px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+button{
+background:#007BFF;
+color:white;
+border:none;
+padding:12px;
+width:95%;
+border-radius:5px;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+#qr{
+margin-top:25px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Visitor Registration</h2>
+
+<div class="form-box">
+
+<input id="name" placeholder="Name">
+
+<input id="address" placeholder="Address">
+
+<input id="prant" placeholder="Prant">
+
+<input id="vibhag" placeholder="Vibhag">
+
+<input id="jila" placeholder="Jila">
+
+<input id="nagar" placeholder="Nagar">
+
+<input id="basti" placeholder="Basti">
+
+<input id="mobile" placeholder="Mobile">
+
+<button onclick="register()">Register</button>
+
+<div id="qr"></div>
+
+</div>
+
+<script>
+
+function register(){
+
+let data = {
+
+name:document.getElementById("name").value,
+address:document.getElementById("address").value,
+prant:document.getElementById("prant").value,
+vibhag:document.getElementById("vibhag").value,
+jila:document.getElementById("jila").value,
+nagar:document.getElementById("nagar").value,
+basti:document.getElementById("basti").value,
+mobile:document.getElementById("mobile").value
+
+}
+
+// Google Sheet API
+fetch("https://script.google.com/macros/s/AKfycbz6z37FJdbMSbSYLFt8KN0lgffOcs7pmHcDDs5WXMEco3WSWiMLlXAfFTDUefKcGCfW/exec",{
+
+method:"POST",
+body:JSON.stringify(data)
+
+})
+
+let qrdata = JSON.stringify(data)
+
+let qr = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(qrdata)
+
+document.getElementById("qr").innerHTML =
+
+"<h3>Registration Successful</h3>" +
+"<p>Your Entry QR</p>" +
+"<img src='"+qr+"'>" +
+"<p>Please save or screenshot this QR</p>"
+
+}
+
+</script>
+
+</body>
+</html>
